@@ -36,11 +36,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.antMatcher("/api/**"); //filter 범위 정하기
-        http.authorizeRequests((requests) ->
-                requests.antMatchers("/").permitAll()
-                                .anyRequest().authenticated());
-        http.formLogin();
-        http.httpBasic();
+//        http.antMatcher("/api/**"); //filter 범위 정하기
+//        http.authorizeRequests((requests) ->
+//                requests.antMatchers("/").permitAll()
+//                                .anyRequest().authenticated());
+//        http.formLogin();
+//        http.httpBasic();
+        http
+                .headers().disable()
+                .csrf().disable()
+                .formLogin(login ->
+                        login.defaultSuccessUrl("/",false)
+                )
+                .logout().disable()
+                .requestCache().disable();
     }
 }
