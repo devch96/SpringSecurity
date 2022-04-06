@@ -1,7 +1,11 @@
 package com.sp.fc.web.config;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,7 +13,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 
 @EnableWebSecurity(debug = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final CustomAuthDetails customAuthDetails;
+
+    public SecurityConfig(CustomAuthDetails customAuthDetails) {
+        this.customAuthDetails = customAuthDetails;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -29,20 +40,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
+    @Bean
+    RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
+        return roleHierarchy;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests(request->{
+                .authorizeRequests(request -> {
                     request
                             .antMatchers("/").permitAll()
                             .anyRequest().authenticated()
-                            ;
+                    ;
                 })
                 .formLogin(
                         login -> login.loginPage("/login")
                                 .permitAll() // 순환참조 막기
+                                .defaultSuccessUrl("/", false) //alwaysUse : 원하는 곳으로 이동
+                                .failureUrl("/login-error")
+                                .authenticationDetailsSource(customAuthDetails)
                 ) // UsernamePasswordAuthenticationFilter
-                ;
+                .logout(logout -> logout.logoutSuccessUrl("/"))
+                .exceptionHandling(exception -> exception.accessDeniedPage("/access-denied"))
+        ;
     }
 
     /**
