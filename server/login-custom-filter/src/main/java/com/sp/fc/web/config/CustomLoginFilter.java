@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
+
     public CustomLoginFilter(AuthenticationManager authenticationManager){
         super(authenticationManager);
     }
@@ -25,18 +26,17 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
         password = (password != null) ? password : "";
         String type = request.getParameter("type");
         if(type == null || !type.equals("teacher")){
-            //student
+            // student
             StudentAuthenticationToken token = StudentAuthenticationToken.builder()
                     .credentials(username).build();
             return this.getAuthenticationManager().authenticate(token);
         }else{
-            //teacher
+            // teacher
             TeacherAuthenticationToken token = TeacherAuthenticationToken.builder()
                     .credentials(username).build();
             return this.getAuthenticationManager().authenticate(token);
         }
-//        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
-//        setDetails(request, authRequest);
-//        return this.getAuthenticationManager().authenticate(authRequest);
     }
+
+
 }

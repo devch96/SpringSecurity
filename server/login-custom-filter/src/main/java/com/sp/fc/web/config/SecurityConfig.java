@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    UsernamePasswordAuthenticationFilter s;
+
     private final StudentManager studentManager;
     private final TeacherManager teacherManager;
 
@@ -23,6 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.studentManager = studentManager;
         this.teacherManager = teacherManager;
     }
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -36,18 +37,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests(request->
                         request.antMatchers("/", "/login").permitAll()
-                                .anyRequest().authenticated()
-
+                        .anyRequest().authenticated()
                 )
                 .formLogin(
-                        login -> login.loginPage("/login")
-                                .permitAll()
-                                .defaultSuccessUrl("/",false)
-                                .failureUrl("/login-error")
+                        login->login.loginPage("/login")
+                        .permitAll()
+                        .defaultSuccessUrl("/", false)
+                        .failureUrl("/login-error")
                 )
                 .addFilterAt(filter, UsernamePasswordAuthenticationFilter.class)
-                .logout(logout -> logout.logoutSuccessUrl("/"))
-                .exceptionHandling(e -> e.accessDeniedPage("/access-denied"))
+                .logout(logout->logout.logoutSuccessUrl("/"))
+                .exceptionHandling(e->e.accessDeniedPage("/access-denied"))
                 ;
     }
 

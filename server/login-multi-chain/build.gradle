@@ -1,7 +1,6 @@
 
-apply from : "../web-common.gradle"
+apply from: "../web-common.gradle"
 
 dependencies {
-
+    implementation(project(":web-student-teacher"))
 }
-
