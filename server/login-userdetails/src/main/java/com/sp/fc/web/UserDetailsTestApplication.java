@@ -7,14 +7,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = {
-        "com.sp.fc.user",
+        "com.sp.fc.config",
         "com.sp.fc.web"
-})
-@EntityScan(basePackages = {
-        "com.sp.fc.user.domain"
-})
-@EnableJpaRepositories(basePackages = {
-        "com.sp.fc.user.repository"
 })
 public class UserDetailsTestApplication {
 

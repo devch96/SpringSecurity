@@ -36,14 +36,14 @@ subprojects {
     }
 
     configurations {
-        developmentOnly
+//        developmentOnly
         runtimeClasspath {
             extendsFrom developmentOnly
         }
     }
 
     dependencies {
-        developmentOnly("$boot:spring-boot-devtools")
+//        developmentOnly("$boot:spring-boot-devtools")
         implementation "$boot:spring-boot-starter-security"
         implementation 'com.fasterxml.jackson.core:jackson-annotations'
 
@@ -53,6 +53,8 @@ subprojects {
         testAnnotationProcessor lombok
 
         testImplementation "$boot:spring-boot-starter-test"
+        // https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-servlet-api
+        implementation group: 'org.apache.tomcat', name: 'tomcat-servlet-api', version: '9.0.56'
     }
 
     test {
