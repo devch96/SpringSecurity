@@ -1,8 +1,10 @@
 package com.sp.fc.web.controller;
 
+import com.sp.fc.web.config.CustomSecurityTag;
 import com.sp.fc.web.service.Paper;
 import com.sp.fc.web.service.PaperService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,10 +31,18 @@ public class PaperController {
         return paperService.getMyPapers(user.getUsername());
     }
 
+//    @Secured({"SCHOOL_PRIMARY"})
+    @CustomSecurityTag("SCHOOL_PRIMARY")
+    @GetMapping("/getPapersByPrimary")
+    public List<Paper> getPapersByPrimary(@AuthenticationPrincipal User user){
+        return paperService.getAllPapers();
+    }
+
 //    @PreAuthorize("hasPermission(#paperId, 'paper', 'read')")
     @PostAuthorize("returnObject.studentIds.contains(#user.username)")
     @GetMapping("/get/{paperId}")
     public Paper getPaper(@AuthenticationPrincipal User user, @PathVariable Long paperId){
         return paperService.getPaper(paperId);
     }
+
 }
