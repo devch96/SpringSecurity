@@ -28,8 +28,8 @@ public class CustomVoter implements AccessDecisionVoter<MethodInvocation> {
                 attr-> attr.getAttribute().startsWith(PREFIX)
         ).map(
                 attr -> attr.getAttribute().substring(PREFIX.length())
-        ).findFirst().get();
-        if(authentication.getAuthorities().stream().filter(
+        ).findFirst().orElseGet(() -> null);
+        if(role != null && authentication.getAuthorities().stream().filter(
                 auth->auth.getAuthority().equals("ROLE_"+role.toUpperCase()
         )).findAny().isPresent()){
             return ACCESS_GRANTED;
