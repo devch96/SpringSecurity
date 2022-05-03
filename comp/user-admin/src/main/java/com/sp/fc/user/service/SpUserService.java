@@ -1,8 +1,11 @@
 package com.sp.fc.user.service;
 
+import com.sp.fc.user.domain.SpOAuth2User;
 import com.sp.fc.user.domain.SpUser;
 import com.sp.fc.user.domain.SpAuthority;
+import com.sp.fc.user.repository.SpOAuth2UserRepository;
 import com.sp.fc.user.repository.SpUserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +21,9 @@ import java.util.stream.Collectors;
 public class SpUserService implements UserDetailsService {
 
     private final SpUserRepository spUserRepository;
+
+    @Autowired
+    private SpOAuth2UserRepository oAuth2UserRepository;
 
     public SpUserService(SpUserRepository spUserRepository) {
         this.spUserRepository = spUserRepository;
@@ -66,5 +72,21 @@ public class SpUserService implements UserDetailsService {
                 save(user);
             }
         });
+    }
+
+    public SpUser load(SpOAuth2User oAuth2User) {
+        SpOAuth2User dbUser = oAuth2UserRepository.findById(oAuth2User.getOauth2UserId())
+                .orElseGet(()->{
+                    SpUser user = new SpUser();
+                    user.setEmail(oAuth2User.getEmail());
+                    user.setName(oAuth2User.getName());
+                    user.setEnabled(true);
+                    user = spUserRepository.save(user);
+                    addAuthority(user.getUserId(), "ROLE_USER");
+
+                    oAuth2User.setUserId(user.getUserId());
+                    return oAuth2UserRepository.save(oAuth2User);
+                });
+        return spUserRepository.findById(dbUser.getUserId()).get();
     }
 }

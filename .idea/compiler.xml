@@ -16,6 +16,7 @@
         <module name="sp-fastcampus-spring-sec.server-login-custom-filter.test" />
         <module name="sp-fastcampus-spring-sec.server-basic-test.test" />
         <module name="sp-fastcampus-spring-sec.server-login-rememberme.test" />
+        <module name="sp-fastcampus-spring-sec.server-sns-logins.main" />
         <module name="sp-fastcampus-spring-sec.server-login-session-management.test" />
         <module name="sp-fastcampus-spring-sec.server-login-basic.main" />
         <module name="sp-fastcampus-spring-sec.server-login-custom-filter.main" />
@@ -40,6 +41,7 @@
         <module name="sp-fastcampus-spring-sec.server-login-userdetails.main" />
         <module name="sp-fastcampus-spring-sec.test-web-util.test" />
         <module name="sp-fastcampus-spring-sec.web-user-admin.main" />
+        <module name="sp-fastcampus-spring-sec.server-sns-logins.test" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17" />
