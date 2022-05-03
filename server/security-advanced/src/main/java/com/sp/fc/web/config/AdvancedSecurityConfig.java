@@ -27,7 +27,7 @@ public class AdvancedSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        JWTLoginFilter loginFilter = new JWTLoginFilter(authenticationManager());
+        JWTLoginFilter loginFilter = new JWTLoginFilter(authenticationManager(), spUserService);
         JWTCheckFilter checkFilter = new JWTCheckFilter(authenticationManager(), spUserService);
         http
                 .csrf().disable() //mobile client >token을 쓰려면 disable 해야함
